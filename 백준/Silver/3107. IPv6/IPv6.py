@@ -1,64 +1,40 @@
 ipv6 = input()
 
-ipv6_split = ipv6.split("::")
+if "::" in ipv6:     
+    ipv6_split = ipv6.split("::")
 
-if "::" in ipv6:
-    left = ipv6_split[0] if ipv6_split[0] else []
-    right = ipv6_split[1] if ipv6_split[1] else []
+    left_split = ipv6_split[0].split(":")
+    right_split = ipv6_split[1].split(":")
 
-    if len(left) == 0:
-        left = []
-        splited_right = right.split(":")
+    left_split_len = len(left_split)
+    right_split_len = len(right_split)
 
-        for i in range(len(splited_right)):
-            splited_right[i] = ((4 - len(splited_right[i])) * "0") + splited_right[i]
-        for _ in range(8 - len(splited_right)):
-            left.append("0000")
+    for i in range(left_split_len):
+        curr_str_len = len(left_split[i])
+        if curr_str_len < 4:
+            left_split[i] = "0" * (4-curr_str_len)  + left_split[i]
+    
+    for i in range(right_split_len):
+        curr_str_len = len(right_split[i])
+        if curr_str_len < 4:
+            right_split[i] = "0" * (4-curr_str_len)  + right_split[i]
+    
+    missing_zero = 8 - (left_split_len + right_split_len)
+    zero_list = []
 
-        arr_add = left + splited_right
-        print(":".join(arr_add))
-
-    elif len(right) == 0:
-        right = []
-        splited_left = left.split(":")
-
-        for i in range(len(splited_left)):
-            splited_left[i] = ((4 - len(splited_left[i])) * "0") + splited_left[i]
-        for _ in range(8 - len(splited_left)):
-            right.append("0000")
-
-        arr_add = splited_left + right
-        print(":".join(arr_add))
-
-    else:
-        mid = []
-        splited_left = left.split(":")
-        splited_right = right.split(":")
-        count_left = len(splited_left)
-        count_right = len(splited_right)
-
-        for i in range(count_left):
-            if len(splited_left[i]) < 4:
-                splited_left[i] = ((4 - len(splited_left[i])) * "0") + splited_left[i]
-
-        for i in range(count_right):
-            if len(splited_right[i]) < 4:
-                splited_right[i] = ((4 - len(splited_right[i])) * "0") + splited_right[i]
-
-        for _ in range(8 - (count_left + count_right)):
-            mid.append("0000")
-
-        arr_add = splited_left + mid + splited_right
-        final_str = ":".join(arr_add)
-
-        print(final_str)
-
+    for i in range(missing_zero):
+        zero_list.append("0000")
+    res = left_split + zero_list + right_split
+    print(":".join(res))
 else:
     ipv6_split = ipv6.split(":")
+    ipv6_len = len(ipv6_split)
 
-    for i in range(len(ipv6_split)):
-        if len(ipv6_split[i]) < 4:
-            zeros = "0" * (4 - len(ipv6_split[i]))
-            ipv6_split[i] = zeros + ipv6_split[i]
-
+    for i in range(ipv6_len):
+        curr_str_len = len(ipv6_split[i])
+        if curr_str_len < 4:
+            ipv6_split[i] = "0" * (4-curr_str_len) + ipv6_split[i]
+    
     print(":".join(ipv6_split))
+
+
